@@ -47,12 +47,19 @@ public class MainActivity2 extends AppCompatActivity {
 
     }
 
+    // protect OnSaveInstance ele é chamado na recriação do layout no ciclo de vida
+    // public OnSaveInstance ele é chamado após um destroy
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
         outState.putString("sorteado", tv.getText().toString());
+
     }
 
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        tv.setText(savedInstanceState.getString("sorteado"));
 
-
+    }
 }
