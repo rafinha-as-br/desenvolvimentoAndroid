@@ -1,6 +1,10 @@
 package com.example.myapplication;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +13,11 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class IMCresultado extends AppCompatActivity {
+    Button b;
+
+    TextView tvResultado;
+
+    ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,5 +29,46 @@ public class IMCresultado extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        tvResultado = findViewById(R.id.textViewResultado);
+        imageView = findViewById(R.id.imageView);
+
+        b=findViewById(R.id.buttonReturn);
+        b.setOnClickListener(v->{
+            finish();
+        });
+
+        Bundle bundle = getIntent().getExtras();
+        float peso = bundle.getFloat("peso");
+        float altura = bundle.getFloat("altura");
+
+        float imc = peso/(altura * altura);
+        tvResultado.setText(Float.toString(imc));
+
+        if(imc<18.5){
+            imageView.setImageResource(R.drawable.abaixopeso);
+            return;
+        }
+        if(imc<24.9){
+            imageView.setImageResource(R.drawable.normal);
+            return;
+        }
+        if(imc<29.9){
+            imageView.setImageResource(R.drawable.sobrepeso);
+        }
+        if(imc<34.9){
+            imageView.setImageResource(R.drawable.obesidade1);
+            return;
+        }
+        if(imc<39.9){
+            imageView.setImageResource(R.drawable.obesidade2);
+            return;
+        }
+        if(imc>40){
+            imageView.setImageResource(R.drawable.obesidade3);
+            return;
+        }
+
+
     }
 }
