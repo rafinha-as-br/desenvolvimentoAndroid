@@ -13,6 +13,9 @@
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
         <activity
+            android:name=".absolute_layout"
+            android:exported="false" />
+        <activity
             android:name=".relative_layout"
             android:exported="false" />
         <activity
