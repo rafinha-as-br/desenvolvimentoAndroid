@@ -21,7 +21,8 @@ public class MainActivity3 extends AppCompatActivity {
 
 
     ListView listView;
-    ArrayList<String> nomes;
+
+    ControllerPlaneta controllerPlaneta;
 
     EditText editText;
 
@@ -34,29 +35,22 @@ public class MainActivity3 extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main3);
 
-        nomes = new ArrayList<>(){{
-            add("Apple");
-            add("Banana");
-            add("Cherry");
-        }};
+
 
         editText = findViewById(R.id.textField);
 
+        PlanetaAdapter adapter = new PlanetaAdapter(this, R.layout.itemlista, controllerPlaneta.getPlanetas());
 
 
 
         listView = findViewById(R.id.listView);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>( this,
-                android.R.layout.simple_list_item_1,
-                nomes
-        );
+
 
         button = findViewById(R.id.button);
         listView.setAdapter(adapter);
 
         button.setOnClickListener(click -> {
 
-            nomes.add(editText.getText().toString());
             adapter.notifyDataSetChanged();
 
         });
@@ -66,14 +60,13 @@ public class MainActivity3 extends AppCompatActivity {
 
                     Toast.makeText(
                             getApplicationContext(),
-                            "Elemento clicado: " + nomes.get(position),
+                            "Planeta clicado: " + controllerPlaneta.get(position).nome,
                             Toast.LENGTH_SHORT).show();
 
         });
 
-        listView.setOnLongClickListener(
+        listView.setOnItemLongClickListener(
                 (parent, view, position, id)-> {
-                    nomes.remove(position);
                     adapter.notifyDataSetChanged();
                     return true;
                 });
