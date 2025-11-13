@@ -1,56 +1,62 @@
 package com.example.myapplication;
 
-import android.content.DialogInterface;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import com.skydoves.colorpickerview.ColorEnvelope;
-import com.skydoves.colorpickerview.ColorPickerDialog;
-import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener;
+import java.util.List;
 
-public class MainActivity2 extends AppCompatActivity {
+public class MainActivity2 extends AppCompatActivity implements SensorEventListener {
+
+    private SQLiteDatabase banco;
+    SensorManager sensorManager;
+    Sensor sensorLuz;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main4);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+
+        banco = this.openOrCreateDatabase("banco", getBaseContext().MODE_PRIVATE, null);
+
+        sensorManager=(SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        sensorLuz= sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
+
+        sensorManager.registerListener(this, sensorLuz,SensorManager.SENSOR_DELAY_NORMAL);
 
 
-        findViewById(R.id.pickerButton).setOnClickListener(v->{
-            new ColorPickerDialog.Builder(this)
-                    .setTitle("ColorPicker Dialog")
-                    .setPreferenceName("MyColorPickerDialog")
-                    .setPositiveButton("Confirma",
-                            new ColorEnvelopeListener() {
-                                @Override
-                                public void onColorSelected(ColorEnvelope envelope, boolean fromUser) {
-                                    setColor(envelope);
-                                }
-                            })
-                    .setNegativeButton("Cancelar",
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    dialogInterface.dismiss();
-                                }
-                            })
-                    .attachAlphaSlideBar(true) // the default value is true.
-                    .attachBrightnessSlideBar(true)  // the default value is true.
-                    .setBottomSpace(12) // set a bottom space between the last slidebar and buttons.
-                    .show();
-        });
     }
 
-    public void setColor(ColorEnvelope envelope){}
+    public void inserirTabela(String nomeTabela, ContentValues values){
+        this.banco.insert(nomeTabela, null, values);
+    }
+
+    public void editarTabela(String nomeTabela, String[] id, ContentValues values){
+        this.banco.update(nomeTabela, values, "WHERE ID = ?", id);
+    }
+
+    public void remover(String nomeTabela, String[] id){
+        this.banco.delete(nomeTabela, "WHERE ID = ?", id);
+    }
+
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
+    }
 }
